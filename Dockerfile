@@ -10,6 +10,10 @@ RUN git clone -b master https://github.com/instrumenta/kubernetes-json-schema --
 
 FROM fraserdarwent/docker-caddy:${CADDY_VERSION}
 ARG KUBERNETES_JSON_SCHEMA_VERSION
+ENV KUBERNETES_JSON_SCHEMA_VERSION=${KUBERNETES_JSON_SCHEMA_VERSION}
 COPY --from=assets /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION} /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}
-
-CMD [ "file-server", "--listen", ":8080" ]
+COPY --from=assets /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-local /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-local
+COPY --from=assets /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-standalone /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-standalone
+COPY --from=assets /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-standalone-strict /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}-standalone-strict
+COPY Caddyfile /Caddyfile
+CMD [ "run" ]

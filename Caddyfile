@@ -1,0 +1,5 @@
+:8080
+
+file_server
+root kubernetes-json-schema
+uri_replace * master {$KUBERNETES_JSON_SCHEMA_VERSION}
