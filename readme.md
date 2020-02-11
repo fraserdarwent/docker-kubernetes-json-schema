@@ -10,3 +10,17 @@
 
 # Versions
 See [versions file](https://github.com/fraserdarwent/docker-kubernetes-json-schema/blob/master/versions.txt)
+
+# Example Kubeval Usage
+Start container
+```bash
+docker run -p 8080:8080 fraserdarwent/kubernetes-json-schema:v1.15.1
+```
+Use with [Kubeval](https://github.com/instrumenta/kubeval)
+```bash
+kubeval rolebinding.yaml --schema-location http://localhost:8080
+```
+or
+```bash
+kubeval rolebinding.yaml --schema-location http://localhost:8080 --kubernetes-version 1.15.1
+```
