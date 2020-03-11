@@ -27,4 +27,4 @@ release-all: checks assets
 			for FILE in /tmp/kubernetes-json-schema/*-standalone; do make release kubernetes-json-schema-version=$$(echo "$${FILE}" | sed -e 's|/tmp/kubernetes-json-schema/||g' -e 's|-standalone||g'); done
 
 checks: 
-			if [ "$(reason)" != "local"]; then echo "Running remotely. Please log in" && exit 1; fi
+			if [ "$(reason)" != "local" ]; then echo "Running remotely. Please log in" && exit 1; fi
