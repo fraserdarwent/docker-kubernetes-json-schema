@@ -4,10 +4,8 @@ image-name=kubernetes-json-schema
 
 build: docker
 
-docker: assets
+docker:
 			echo "Building Docker image for Kubernetes API version $(kubernetes-json-schema-version) on Caddy version $(caddy-version)"
-			if [ -d kubernetes-json-schema ]; then rm -rf kubernetes-json-schema/*; else mkdir kubernetes-json-schema; fi
-			cp -r /tmp/kubernetes-json-schema/$(kubernetes-json-schema-version)-standalone/ kubernetes-json-schema/$(kubernetes-json-schema-version)-standalone/
 			docker build . -t fraserdarwent/$(image-name):$(kubernetes-json-schema-version) --build-arg KUBERNETES_JSON_SCHEMA_VERSION=$(kubernetes-json-schema-version) --build-arg CADDY_VERSION=$(caddy-version)
 			rm -rf kubernetes-json-schema
 
@@ -25,5 +23,4 @@ assets:
 
 release-all: assets
 			echo "Releasing Docker images for all Kubernetes API versions on Caddy version $(caddy-version)"
-			for FILE in /tmp/kubernetes-json-schema/*-standalone; do make release kubernetes-json-schema-version=$$(echo "$${FILE}" | sed -e 's|/tmp/kubernetes-json-schema/||g'); done
-
+			for FILE in /tmp/kubernetes-json-schema/*-standalone; do make release kubernetes-json-schema-version=$$(echo "$${FILE}" | sed -e 's|/tmp/kubernetes-json-schema/||g' -e 's|-standalone||g'); done
