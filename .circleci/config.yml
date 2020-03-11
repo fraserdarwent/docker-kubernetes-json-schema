@@ -14,4 +14,4 @@ jobs:
       - run:
           name: Make
           command: |
-            make release-all
+            make release-all -e reason=circleci
