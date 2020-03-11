@@ -3,10 +3,10 @@ workflows:
   version: 2
   Build:
     jobs:
-      - Build
+      - Build:
+          context: Dockerhub
 jobs:
   Build:
-    context: Dockerhub
     docker:
       - image: cimg/base:2020.01
     steps:
