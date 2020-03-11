@@ -1,9 +1,15 @@
 version: 2.1
+workflows:
+  version: 2
+  Build:
+    jobs:
+      - Build
 jobs:
-  build:
+  Build:
     docker:
       - image: cimg/base:2020.01
     steps:
+      - checkout
       - run:
           name: Make
           command: |
