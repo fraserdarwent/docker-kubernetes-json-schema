@@ -2,6 +2,7 @@ caddy-version=2.0.0-beta.13
 kubernetes-json-schema-version=master
 image-name=kubernetes-json-schema
 reason=local
+overwrite=false
 
 build: docker
 
@@ -24,7 +25,13 @@ assets:
 
 release-all: checks assets
 			echo "Releasing Docker images for all Kubernetes API versions on Caddy version $(caddy-version)"
-			for FILE in /tmp/kubernetes-json-schema/*-standalone; do make release kubernetes-json-schema-version=$$(echo "$${FILE}" | sed -e 's|/tmp/kubernetes-json-schema/||g' -e 's|-standalone||g'); done
+			
+			rm -f /tmp/versions_local.txt
+			for FILE in /tmp/kubernetes-json-schema/*-standalone-strict; do echo "$$(echo "$${FILE}" | sed -e 's|/tmp/kubernetes-json-schema/||g' -e 's|-standalone-strict||g')" >> /tmp/versions_local.txt; done
 
+			rm -f /tmp/versions_remote.txt
+			wget -q https://registry.hub.docker.com/v1/repositories/fraserdarwent/kubernetes-json-schema/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print $$3}' > /tmp/versions_remote.txt
+			
+			for VERSION in $$(cat /tmp/versions_local.txt); do (grep "$${VERSION}" /tmp/versions_remote.txt > /dev/null && echo "Found $${VERSION} remotely" && [ "$(overwrite)" == "false" ]) || (echo "Could not find $${VERSION} remotely" && make release kubernetes-json-schema-version=$${VERSION}); done
 checks: 
 			if [ "$(reason)" != "local" ]; then docker login -u fraserdarwent -p $${DOCKERHUB_ACCESS_TOKEN}; fi
