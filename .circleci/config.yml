@@ -1,12 +1,15 @@
 version: 2.1
 workflows:
   version: 2
-  Build:
+  nightly:
+    triggers:
+      - schedule:
+          cron: 0 4 1-31/2 * *
     jobs:
-      - Build:
-          context: Dockerhub
+      - build:
+          context: Global
 jobs:
-  Build:
+  build:
     docker:
       - image: cimg/base:2020.01
     steps:
