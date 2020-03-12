@@ -1,0 +1,25 @@
+version: 2.1
+workflows:
+  version: 2
+  nightly:
+    triggers:
+      - schedule:
+          cron: 0 4 * * *
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          context: Global
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Make
+          command: |
+            make release-all -e reason=circleci

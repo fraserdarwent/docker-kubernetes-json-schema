@@ -6,9 +6,10 @@ FROM alpine:${ALPINE_VERSION} AS assets
 
 RUN apk add git
 
-RUN git clone -b master https://github.com/instrumenta/kubernetes-json-schema --single-branch
+RUN git clone https://github.com/instrumenta/kubernetes-json-schema --single-branch
+RUN ls -la kubernetes-json-schema
 
-FROM fraserdarwent/docker-caddy:${CADDY_VERSION}
+FROM fraserdarwent/caddy:${CADDY_VERSION}
 ARG KUBERNETES_JSON_SCHEMA_VERSION
 ENV KUBERNETES_JSON_SCHEMA_VERSION=${KUBERNETES_JSON_SCHEMA_VERSION}
 COPY --from=assets /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION} /kubernetes-json-schema/${KUBERNETES_JSON_SCHEMA_VERSION}
