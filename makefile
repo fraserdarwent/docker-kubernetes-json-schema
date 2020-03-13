@@ -32,6 +32,6 @@ release-all: checks assets
 			rm -f /tmp/versions_remote.txt
 			wget -q https://registry.hub.docker.com/v1/repositories/fraserdarwent/kubernetes-json-schema/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print $$3}' > /tmp/versions_remote.txt
 			
-			for VERSION in $$(cat /tmp/versions_local.txt); do (grep "$${VERSION}" /tmp/versions_remote.txt > /dev/null && echo "Found $${VERSION} remotely" && [ "$(overwrite)" == "false" ]) || (echo "Could not find $${VERSION} remotely" && make release kubernetes-json-schema-version=$${VERSION}); done
+			for VERSION in $$(cat /tmp/versions_local.txt); do (grep "$${VERSION}" /tmp/versions_remote.txt > /dev/null && echo "Found $${VERSION} remotely") || (echo "Could not find $${VERSION} remotely" && if [ "$(overwrite)" == "false" ]; then make release kubernetes-json-schema-version=$${VERSION}; fi); done
 checks: 
 			if [ "$(reason)" != "local" ]; then docker login -u fraserdarwent -p $${DOCKERHUB_ACCESS_TOKEN}; fi
